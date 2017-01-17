@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="output.aspx.cs" Inherits="FeedScraper.WebApp.output" %>
