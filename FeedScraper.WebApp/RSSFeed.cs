@@ -8,12 +8,14 @@ namespace FeedScraper.WebApp
         public string Title { get; set; }
         public string Description { get; set; }
         public string Link { get; set; }
+        public string PubDate { get; set; }
 
-        public RssNewsEntry(string title, string description, string link)
+        public RssNewsEntry(string title, string description, string link, string pubDate)
         {
             Title = title;
             Description = description;
             Link = link;
+            PubDate = pubDate;
         }
     }
 
@@ -39,10 +41,12 @@ namespace FeedScraper.WebApp
             XmlNode rssNodeTitle = rssXml.CreateElement("title");
             XmlNode rssNodeLink = rssXml.CreateElement("link");
             XmlNode rssNodeDescription = rssXml.CreateElement("description");
+            XmlNode rssNodePubDateNode = rssXml.CreateElement("pubDate");
 
             rssNodeChannel.AppendChild(rssNodeTitle);
             rssNodeChannel.AppendChild(rssNodeLink);
             rssNodeChannel.AppendChild(rssNodeDescription);
+            rssNodeChannel.AppendChild(rssNodePubDateNode);
 
             foreach (var entry in rssList)
             {
@@ -52,14 +56,17 @@ namespace FeedScraper.WebApp
                 XmlNode newsItemTitleNode = rssXml.CreateElement("title");
                 XmlNode newsItemDescrNode = rssXml.CreateElement("description");
                 XmlNode newsItemLinkNode = rssXml.CreateElement("link");
+                XmlNode newsItemPubDateNode = rssXml.CreateElement("pubDate");
 
                 newsItemTitleNode.InnerText = entry.Title;
                 newsItemLinkNode.InnerText = entry.Link;
                 newsItemDescrNode.InnerText = entry.Description;
+                newsItemPubDateNode.InnerText = entry.PubDate;
 
                 newsItemNode.AppendChild(newsItemTitleNode);
                 newsItemNode.AppendChild(newsItemLinkNode);
                 newsItemNode.AppendChild(newsItemDescrNode);
+                newsItemNode.AppendChild(newsItemPubDateNode);
 
             }
 

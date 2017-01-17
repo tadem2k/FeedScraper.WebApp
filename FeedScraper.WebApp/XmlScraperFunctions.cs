@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -13,6 +12,7 @@ namespace FeedScraper.WebApp
          * Loading Namespaces from the file
          * 
          */
+
         public static XmlNamespaceManager GetNameSpaceManager(XmlDocument xDoc)
         {
             var nsm = new XmlNamespaceManager(xDoc.NameTable);
@@ -22,13 +22,19 @@ namespace FeedScraper.WebApp
 
             if (nameSpaces == null) return nsm;
 
-            foreach (KeyValuePair<string, string> kvp in nameSpaces)
+            foreach (var kvp in nameSpaces)
             {
                 nsm.AddNamespace(kvp.Key.Length == 0 ? "ns" : kvp.Key, kvp.Value);
             }
 
             return nsm;
         }
+
+        /*
+         * 
+         * Recursive function to remove namespaces
+         * 
+         */
 
         public static string RemoveAllNamespaces(string xmlDocument)
         {
@@ -41,7 +47,7 @@ namespace FeedScraper.WebApp
         {
             if (!xmlDocument.HasElements)
             {
-                var xElement = new XElement(xmlDocument.Name.LocalName) { Value = xmlDocument.Value };
+                var xElement = new XElement(xmlDocument.Name.LocalName) {Value = xmlDocument.Value};
 
                 foreach (var attribute in xmlDocument.Attributes())
                     xElement.Add(attribute);
