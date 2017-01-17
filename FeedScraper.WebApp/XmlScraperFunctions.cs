@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -55,6 +56,14 @@ namespace FeedScraper.WebApp
                 return xElement;
             }
             return new XElement(xmlDocument.Name.LocalName, xmlDocument.Elements().Select(el => RemoveAllNamespaces(el)));
+        }
+        /*
+         * String HDML and XML tags
+         */
+
+        public static string StripTags(string text)
+        {
+            return Regex.Replace(text, @"<(.|\n)*?>", string.Empty);
         }
     }
 }

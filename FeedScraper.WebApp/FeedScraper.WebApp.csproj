@@ -121,6 +121,7 @@
     <Compile Include="error.aspx.designer.cs">
       <DependentUpon>error.aspx</DependentUpon>
     </Compile>
+    <Compile Include="FeedOriginValidator.cs" />
     <Compile Include="output.aspx.cs">
       <DependentUpon>output.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

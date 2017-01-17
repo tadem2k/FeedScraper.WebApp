@@ -9,9 +9,11 @@ using System.Xml.Schema;
 
 namespace FeedScraper.WebApp
 {
+
     public class DocumentReader
     {
         public XmlDocument XmlDoc = new XmlDocument();
+        public FeedOriginValidator RssFeedOriginValidator = new FeedOriginValidator();
 
         public DocumentReader(HttpRequest url)
         {
@@ -24,7 +26,7 @@ namespace FeedScraper.WebApp
 
             GetParsingInstructionsFromtRequest(url);
 
-            if (GetUrlFromRequest(url))
+            if (GetUrlFromRequest(url) && RssFeedOriginValidator.IsValidFeedOrigin(url))
             {
                 try
                 {
@@ -52,7 +54,7 @@ namespace FeedScraper.WebApp
             }
             else
             {
-                Debug.WriteLine("No URL Entered, check your address");
+                Debug.WriteLine("No URL or Illigal resource has been entered.");
             }
         }
 
@@ -78,6 +80,7 @@ namespace FeedScraper.WebApp
 
         public bool GetUrlFromRequest(HttpRequest clintRequest)
         {
+
             if (clintRequest.Url.Query.IndexOf("url=", StringComparison.Ordinal) > 0)
             {
                 UrlAddress = clintRequest.Url.Query.Replace("&", "&amp;");
@@ -93,14 +96,6 @@ namespace FeedScraper.WebApp
             return false;
         }
 
-        /*
-         * String HDML and XML tags
-         */
-
-        public string StripTags(string text)
-        {
-            return Regex.Replace(text, @"<(.|\n)*?>", string.Empty);
-        }
 
         /*
          * Reads typical RSS feeds and grabs the news into the list
@@ -120,7 +115,7 @@ namespace FeedScraper.WebApp
             {
                 try
                 {
-                    newsRssList.Add(new RssNewsEntry(node["title"]?.InnerText, StripTags(node["description"]?.InnerText),
+                    newsRssList.Add(new RssNewsEntry(node["title"]?.InnerText, XmlScraperFunctions.StripTags(node["description"]?.InnerText),
                         node["link"]?.InnerText, node["pubDate"]?.InnerText));
                 }
                 catch (NullReferenceException em)
