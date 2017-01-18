@@ -15,11 +15,12 @@ namespace FeedScraper.WebApp
             Response.Clear();
             Response.ContentType = "text/xml";
 
-            var docReader = new DocumentReader(Request);
+            var feedValidator = new FeedValidator(Request);
+            var docReader = new DocumentReader(feedValidator.FeedRequestUrl);
 
             if (docReader.XmlDoc.OuterXml.Length > 0)
             {
-                switch (docReader.ParsingInstructions)
+                switch (feedValidator.FeedProcessingMode)
                 {
                     case "FRB_RSS":
                         {
@@ -48,7 +49,7 @@ namespace FeedScraper.WebApp
             }
             else
             {
-                Response.Write($"<error>Cant render current resource</error><error>Make sure that provided resource is valid XML or RSS feed.</error><error>Recieved URL:{docReader.UrlAddress}</error>");
+                Response.Write($"<error>Cant render current resource</error><error>Make sure that provided resource is valid XML or RSS feed.</error><error>Recieved URL:{feedValidator.FeedRequestUrl}</error>");
             }
 
 
