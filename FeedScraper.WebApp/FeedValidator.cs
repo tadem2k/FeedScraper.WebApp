@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Web;
 
@@ -14,7 +13,7 @@ namespace FeedScraper.WebApp
         public static string FeedxPatch { get; set; }
         public static string FeedParams { get; set; }
         public string FeedRequestUrl { get; set; }
-        private string ErrorPageUrl { get; set; }
+        private static string ErrorPageUrl { get; set; }
 
         /*
          * 
@@ -44,23 +43,30 @@ namespace FeedScraper.WebApp
             else
             {
                 FeedParams = clientHttpRequest.Url.Query.Replace("&", "&amp;");
-                FeedParams = FeedParams.Substring(FeedParams.IndexOf("param=", StringComparison.Ordinal) + 6,
-                    FeedParams.Length - FeedParams.IndexOf("param=", StringComparison.Ordinal) - 6);
+                FeedParams = FeedParams.Substring(FeedParams.IndexOf("params=", StringComparison.Ordinal) + 7,
+                    FeedParams.Length - FeedParams.IndexOf("params=", StringComparison.Ordinal) - 7);
             }
+
+            ErrorPageUrl = "http://" + clientHttpRequest.Url.Host + ":" + clientHttpRequest.Url.Port + "/error.xml";
+
             //
             // get xPath from request
             //
-            FeedxPatch = clientHttpRequest?["xpath"];
+            FeedxPatch = clientHttpRequest["xpath"];
             //
             // get feedProcessing mode from request
             //
-            FeedProcessingMode = clientHttpRequest?["mode"];
+            FeedProcessingMode = clientHttpRequest["mode"];
             //
             // get feed source
             //
-            FeedResource = GetUrlBySourceName(clientHttpRequest?["source"]);
+            FeedResource = GetUrlBySourceName(clientHttpRequest["source"]);
 
+            //
+            // create a feed request url from source + param data
+            //
             FeedRequestUrl = GetFeedRequestUrl();
+
         }
         /*
          * 
@@ -96,9 +102,9 @@ namespace FeedScraper.WebApp
             }
             else
             {
-                return "";
+                return ErrorPageUrl;
             }
-            return "";
+            return ErrorPageUrl;
         }
 
         /*
@@ -110,17 +116,17 @@ namespace FeedScraper.WebApp
         {
             if (FeedResource.Length > 0)
             {
-                var url = FeedResource + FeedParams;
+                var url = $"{FeedResource}{FeedParams}";
 
                     Uri uriResult;
                 var result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-                return result ? url : "";
+                return result ? url : ErrorPageUrl;
             }
             else
             {
-                return "";
+                return ErrorPageUrl;
             }
             
         }

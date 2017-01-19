@@ -107,7 +107,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="error.aspx" />
     <Content Include="output.aspx" />
     <Content Include="scripts\ai.0.22.9-build00167.js" />
     <Content Include="scripts\ai.0.22.9-build00167.min.js" />
@@ -115,13 +114,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DocumentReader.cs" />
-    <Compile Include="error.aspx.cs">
-      <DependentUpon>error.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="error.aspx.designer.cs">
-      <DependentUpon>error.aspx</DependentUpon>
-    </Compile>
     <Compile Include="FeedValidator.cs" />
     <Compile Include="output.aspx.cs">
       <DependentUpon>output.aspx</DependentUpon>
