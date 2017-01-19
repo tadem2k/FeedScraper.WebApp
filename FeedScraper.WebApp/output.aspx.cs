@@ -6,11 +6,10 @@ namespace FeedScraper.WebApp
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            this.Response.Clear();
+            this.Response.ContentType = "text/xml";
 
-            Response.Clear();
-            Response.ContentType = "text/xml";
-
-            var feedValidator = new FeedValidator(Request);
+            var feedValidator = new FeedValidator(this.Request);
             var docReader = new DocumentReader(feedValidator.FeedRequestUrl);
 
             if (docReader.XmlDoc.OuterXml.Length > 0)
@@ -22,8 +21,8 @@ namespace FeedScraper.WebApp
                             var rssFeedItems = docReader.RssParser("/RDF/item");
                             var rssDoc = RssGenerator.GetRssFeedFromList(rssFeedItems);
 
-                            Response.Write(rssDoc.OuterXml);
-                            System.Diagnostics.Debug.WriteLine(rssDoc.OuterXml);
+                            this.Response.Write(rssDoc.OuterXml);
+                            MyDebug.WriteLine(rssDoc.OuterXml);
                             break;
                         }
                     case "RSS":
@@ -31,20 +30,29 @@ namespace FeedScraper.WebApp
                             var rssFeedItems = docReader.RssParser("/rss/channel/item");
                             var rssDoc = RssGenerator.GetRssFeedFromList(rssFeedItems);
 
-                            Response.Write(rssDoc.OuterXml);
-                            System.Diagnostics.Debug.WriteLine(rssDoc.OuterXml);
+                            this.Response.Write(rssDoc.OuterXml);
+                            MyDebug.WriteLine(rssDoc.OuterXml);
                             break;
                         }
                     default:
                         {
-                            Response.Write(docReader.XmlDoc.OuterXml);
+                            this.Response.Write(docReader.XmlDoc.OuterXml);
                             break;
                         }
                 }
             }
             else
             {
-                Response.Write($"<error>Cant render current resource</error><error>Make sure that provided resource is valid XML or RSS feed.</error><error>Recieved URL:{feedValidator.FeedRequestUrl}</error>");
+                this.Response.Redirect("http://" + this.Request.Url.Host + ":" + this.Request.Url.Port + "/error.aspx");
+                /*
+                this.Response.Write($"<error>Cant render current resource</error><error>Make sure that provided resource is valid XML or RSS feed.</error><error>Recieved URL:{feedValidator.FeedRequestUrl}</error>");
+
+                foreach (var msg in MyDebug.Messages)
+                {
+                    this.Response.Write($"<error>{msg}</error>");
+                }
+                */
+                
             }
 
 
@@ -54,7 +62,7 @@ namespace FeedScraper.WebApp
              * http://hosted.ap.org/lineups/USHEADS-rss_2.0.xml?SITE=RANDOM&SECTION=HOME
              * http://www.npr.org/rss/rss.php?id=1001
              */
-            Response.End();
+            this.Response.End();
         }
     }
 }

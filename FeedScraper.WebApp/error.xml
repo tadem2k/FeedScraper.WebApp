@@ -3,11 +3,11 @@
   <channel>
     <title>Feed Scraper Error</title>
     <description>There was an error in the received parameters or external feed is not accessible.</description>
-    <link>h</link>
+    <link></link>
     <category>Feed Scraper Error</category>
     <copyright>Copyright 2017 Federal Reserve Board.</copyright>
     <item>
-      <title>check parameters</title>
+      <title>Feed Scraper Error</title>
       <description>Make sure that parameters are correct and pointing to valid RSS/XML feed</description>
       <link></link>
     </item>

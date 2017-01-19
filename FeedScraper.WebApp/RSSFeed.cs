@@ -25,23 +25,23 @@ namespace FeedScraper.WebApp
         {
             var rssXml = new XmlDocument();
 
-            XmlNode docNode = rssXml.CreateXmlDeclaration("1.0", "UTF-8", null);
+            var docNode = rssXml.CreateXmlDeclaration("1.0", "UTF-8", null);
             rssXml.AppendChild(docNode);
 
-            XmlNode rssNode = rssXml.CreateElement("rss");
+            var rssNode = rssXml.CreateElement("rss");
             rssXml.AppendChild(rssNode);
 
-            XmlAttribute rssNodeVersionAttr = rssXml.CreateAttribute("version");
+            var rssNodeVersionAttr = rssXml.CreateAttribute("version");
             rssNodeVersionAttr.Value = "2.0";
             rssNode.Attributes?.Append(rssNodeVersionAttr);
 
-            XmlNode rssNodeChannel = rssXml.CreateElement("channel");
+            var rssNodeChannel = rssXml.CreateElement("channel");
             rssNode.AppendChild(rssNodeChannel);
 
-            XmlNode rssNodeTitle = rssXml.CreateElement("title");
-            XmlNode rssNodeLink = rssXml.CreateElement("link");
-            XmlNode rssNodeDescription = rssXml.CreateElement("description");
-            XmlNode rssNodePubDateNode = rssXml.CreateElement("pubDate");
+            var rssNodeTitle = rssXml.CreateElement("title");
+            var rssNodeLink = rssXml.CreateElement("link");
+            var rssNodeDescription = rssXml.CreateElement("description");
+            var rssNodePubDateNode = rssXml.CreateElement("pubDate");
 
             rssNodeChannel.AppendChild(rssNodeTitle);
             rssNodeChannel.AppendChild(rssNodeLink);
@@ -50,22 +50,22 @@ namespace FeedScraper.WebApp
 
             foreach (var entry in rssList)
             {
-                XmlNode newsItemNode = rssXml.CreateElement("item");
+                var newsItemNode = rssXml.CreateElement("item");
                 rssNodeChannel.AppendChild(newsItemNode);
 
-                XmlNode newsItemTitleNode = rssXml.CreateElement("title");
-                XmlNode newsItemDescrNode = rssXml.CreateElement("description");
-                XmlNode newsItemLinkNode = rssXml.CreateElement("link");
-                XmlNode newsItemPubDateNode = rssXml.CreateElement("pubDate");
+                var newsItemTitleNode = rssXml.CreateElement("title");
+                var newsItemDescriptionNode = rssXml.CreateElement("description");
+                var newsItemLinkNode = rssXml.CreateElement("link");
+                var newsItemPubDateNode = rssXml.CreateElement("pubDate");
 
                 newsItemTitleNode.InnerText = entry.Title;
                 newsItemLinkNode.InnerText = entry.Link;
-                newsItemDescrNode.InnerText = entry.Description;
+                newsItemDescriptionNode.InnerText = entry.Description;
                 newsItemPubDateNode.InnerText = entry.PubDate;
 
                 newsItemNode.AppendChild(newsItemTitleNode);
                 newsItemNode.AppendChild(newsItemLinkNode);
-                newsItemNode.AppendChild(newsItemDescrNode);
+                newsItemNode.AppendChild(newsItemDescriptionNode);
                 newsItemNode.AppendChild(newsItemPubDateNode);
 
             }

@@ -7,6 +7,8 @@ using System.Xml.Schema;
 
 namespace FeedScraper.WebApp
 {
+    using System.Globalization;
+    using System.Linq;
 
     public class DocumentReader
     {
@@ -30,21 +32,23 @@ namespace FeedScraper.WebApp
                 {
                     try
                     {
-                        XmlDoc.Load(xmlDocReader);
-                        XmlDoc.LoadXml(XmlScraperFunctions.RemoveAllNamespaces(XmlDoc.OuterXml));
+                        this.XmlDoc.Load(xmlDocReader);
+                        this.XmlDoc.LoadXml(XmlScraperFunctions.RemoveAllNamespaces(XmlDoc.OuterXml));
                     }
                     catch (Exception ex)
                     {
                         if (ex is XmlSchemaValidationException || ex is XmlException)
                         {
-                            Debug.WriteLine(ex.Message);
+                            //Debug.WriteLine(ex.Message);
+                            MyDebug.WriteLine(ex.Message);
                         }
                     }
                 }
             }
             catch (WebException we)
             {
-                Debug.WriteLine($"WebException: {we.Message}");
+                //Debug.WriteLine($"WebException: {we.Message}");
+                MyDebug.WriteLine($"WebException: {we.Message}");
             }
         }
 
@@ -56,9 +60,9 @@ namespace FeedScraper.WebApp
         {
             var newsRssList = new List<RssNewsEntry>();
 
-            if (XmlDoc.DocumentElement == null) return newsRssList;
+            if (this.XmlDoc.DocumentElement == null) return newsRssList;
 
-            var newsList = XmlDoc.DocumentElement.SelectNodes(xpath);
+            var newsList = this.XmlDoc.DocumentElement.SelectNodes(xpath);
 
             if (newsList == null) return newsRssList;
 
@@ -71,9 +75,18 @@ namespace FeedScraper.WebApp
                 }
                 catch (NullReferenceException em)
                 {
-                    Debug.WriteLine($"{em.Message}");
-                    Debug.WriteLine(node.OuterXml);
+                    //Debug.WriteLine($"{em.Message}");
+                    //Debug.WriteLine(node.OuterXml);
+                    MyDebug.WriteLine($"{em.Message}");
+                    MyDebug.WriteLine(node.OuterXml);
                 }
+            }
+            //
+            // if error message than add list of errors from debuger
+            //
+            if (MyDebug.Messages.Count != 0)
+            {
+                newsRssList.AddRange(MyDebug.Messages.Select(msg => new RssNewsEntry("debug", msg, "", DateTime.Today.ToString(CultureInfo.InvariantCulture))));
             }
             return newsRssList;
         }

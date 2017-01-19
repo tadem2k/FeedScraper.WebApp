@@ -94,6 +94,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="error.aspx" />
     <Content Include="error.xml" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
@@ -113,7 +114,15 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debug.cs" />
     <Compile Include="DocumentReader.cs" />
+    <Compile Include="error.aspx.cs">
+      <DependentUpon>error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="error.aspx.designer.cs">
+      <DependentUpon>error.aspx</DependentUpon>
+    </Compile>
     <Compile Include="FeedValidator.cs" />
     <Compile Include="output.aspx.cs">
       <DependentUpon>output.aspx</DependentUpon>

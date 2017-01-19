@@ -10,22 +10,23 @@ namespace FeedScraper.WebApp
         private readonly List<ExternalFeed> _approvedFeedList;
         public string FeedProcessingMode { get; set; }
         public static string FeedResource { get; set; }
-        public static string FeedxPatch { get; set; }
+        public static string FeedxPath { get; set; }
         public static string FeedParams { get; set; }
         public string FeedRequestUrl { get; set; }
-        private static string ErrorPageUrl { get; set; }
+
+        public string ErrorPageUrl { get; set; }
 
         /*
          * 
-         * Initialize list of addreses supported by the feed scraper
+         * Initialize list of address's supported by the feed scraper
          * 
          */
         public FeedValidator(HttpRequest clientHttpRequest)
         {
             //
-            // intialize valid feed options list
+            // initialize valid feed options list
             //
-            _approvedFeedList = new List<ExternalFeed>
+            this._approvedFeedList = new List<ExternalFeed>
             {
                 new ExternalFeed("FRB", "https://www.federalreserve.gov/"),
                 new ExternalFeed("MetroAlerts", "http://www.metroalerts.info/"),
@@ -47,25 +48,25 @@ namespace FeedScraper.WebApp
                     FeedParams.Length - FeedParams.IndexOf("params=", StringComparison.Ordinal) - 7);
             }
 
-            ErrorPageUrl = "http://" + clientHttpRequest.Url.Host + ":" + clientHttpRequest.Url.Port + "/error.xml";
+            this.ErrorPageUrl = "http://" + clientHttpRequest.Url.Host + ":" + clientHttpRequest.Url.Port + "/error.xml";
 
             //
             // get xPath from request
             //
-            FeedxPatch = clientHttpRequest["xpath"];
+            FeedxPath = clientHttpRequest["xpath"];
             //
             // get feedProcessing mode from request
             //
-            FeedProcessingMode = clientHttpRequest["mode"];
+            this.FeedProcessingMode = clientHttpRequest["mode"];
             //
             // get feed source
             //
-            FeedResource = GetUrlBySourceName(clientHttpRequest["source"]);
+            FeedResource = this.GetUrlBySourceName(clientHttpRequest["source"]);
 
             //
             // create a feed request url from source + param data
             //
-            FeedRequestUrl = GetFeedRequestUrl();
+            this.FeedRequestUrl = this.GetFeedRequestUrl();
 
         }
         /*
@@ -80,8 +81,8 @@ namespace FeedScraper.WebApp
 
             public ExternalFeed(string resourceNameForFeed, string addressForFeed)
             {
-                ResourceName = resourceNameForFeed;
-                WebAddress = addressForFeed;
+                this.ResourceName = resourceNameForFeed;
+                this.WebAddress = addressForFeed;
             }
         }
 
@@ -93,18 +94,18 @@ namespace FeedScraper.WebApp
         private string GetUrlBySourceName(string sourceName)
         {
             
-            if (sourceName.Length > 0)
+            if (sourceName?.Length > 0)
             { 
-                foreach (var source in _approvedFeedList.Where(source => Equals(source.ResourceName.ToUpper(), sourceName.ToUpper())))
+                foreach (var source in this._approvedFeedList.Where(source => Equals(source.ResourceName.ToUpper(), sourceName.ToUpper())))
                 {
                     return source.WebAddress;
                 }
             }
             else
             {
-                return ErrorPageUrl;
+                return this.ErrorPageUrl;
             }
-            return ErrorPageUrl;
+            return this.ErrorPageUrl;
         }
 
         /*
@@ -112,7 +113,7 @@ namespace FeedScraper.WebApp
          *  function designed to verify if request is not a security thread.
          * 
          */
-        public static string GetFeedRequestUrl()
+        public string GetFeedRequestUrl()
         {
             if (FeedResource.Length > 0)
             {
@@ -122,11 +123,11 @@ namespace FeedScraper.WebApp
                 var result = Uri.TryCreate(url, UriKind.Absolute, out uriResult)
                              && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
-                return result ? url : ErrorPageUrl;
+                return result ? url : this.ErrorPageUrl;
             }
             else
             {
-                return ErrorPageUrl;
+                return this.ErrorPageUrl;
             }
             
         }
