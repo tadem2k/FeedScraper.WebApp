@@ -12,13 +12,16 @@ namespace FeedScraper.WebApp
 
         public RssNewsEntry(string title, string description, string link, string pubDate)
         {
-            Title = title;
-            Description = description;
-            Link = link;
-            PubDate = pubDate;
+            this.Title = title;
+            this.Description = description;
+            this.Link = link;
+            this.PubDate = pubDate;
         }
     }
 
+    /// <summary>
+    /// The rss generator class
+    /// </summary>
     public class RssGenerator
     {
         public static XmlDocument GetRssFeedFromList(List<RssNewsEntry> rssList)
@@ -33,7 +36,7 @@ namespace FeedScraper.WebApp
 
             var rssNodeVersionAttr = rssXml.CreateAttribute("version");
             rssNodeVersionAttr.Value = "2.0";
-            rssNode.Attributes?.Append(rssNodeVersionAttr);
+            rssNode.Attributes.Append(rssNodeVersionAttr);
 
             var rssNodeChannel = rssXml.CreateElement("channel");
             rssNode.AppendChild(rssNodeChannel);

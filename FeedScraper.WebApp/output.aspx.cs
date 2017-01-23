@@ -22,7 +22,6 @@ namespace FeedScraper.WebApp
                             var rssDoc = RssGenerator.GetRssFeedFromList(rssFeedItems);
 
                             this.Response.Write(rssDoc.OuterXml);
-                            MyDebug.WriteLine(rssDoc.OuterXml);
                             break;
                         }
                     case "RSS":
@@ -31,7 +30,7 @@ namespace FeedScraper.WebApp
                             var rssDoc = RssGenerator.GetRssFeedFromList(rssFeedItems);
 
                             this.Response.Write(rssDoc.OuterXml);
-                            MyDebug.WriteLine(rssDoc.OuterXml);
+                            //MyDebug.WriteLine(rssDoc.OuterXml);
                             break;
                         }
                     default:

@@ -7,7 +7,7 @@ namespace FeedScraper.WebApp
 {
     public class FeedValidator
     {
-        private readonly List<ExternalFeed> _approvedFeedList;
+        private readonly List<ExternalFeed> approvedFeedList;
         public string FeedProcessingMode { get; set; }
         public static string FeedResource { get; set; }
         public static string FeedxPath { get; set; }
@@ -26,7 +26,7 @@ namespace FeedScraper.WebApp
             //
             // initialize valid feed options list
             //
-            this._approvedFeedList = new List<ExternalFeed>
+            this.approvedFeedList = new List<ExternalFeed>
             {
                 new ExternalFeed("FRB", "https://www.federalreserve.gov/"),
                 new ExternalFeed("MetroAlerts", "http://www.metroalerts.info/"),
@@ -96,7 +96,7 @@ namespace FeedScraper.WebApp
             
             if (sourceName?.Length > 0)
             { 
-                foreach (var source in this._approvedFeedList.Where(source => Equals(source.ResourceName.ToUpper(), sourceName.ToUpper())))
+                foreach (var source in this.approvedFeedList.Where(source => Equals(source.ResourceName.ToUpper(), sourceName.ToUpper())))
                 {
                     return source.WebAddress;
                 }

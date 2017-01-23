@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Xml;
 using System.Xml.Schema;
@@ -12,10 +11,11 @@ namespace FeedScraper.WebApp
 
     public class DocumentReader
     {
-        public XmlDocument XmlDoc = new XmlDocument();
+        public XmlDocument XmlDoc;
 
         public DocumentReader(string feedUrl)
         {
+            this.XmlDoc = new XmlDocument();
             //
             // http://localhost:50202/output.aspx?source=AP&mode=RSS&params=.rss
             //
@@ -39,16 +39,18 @@ namespace FeedScraper.WebApp
                     {
                         if (ex is XmlSchemaValidationException || ex is XmlException)
                         {
-                            //Debug.WriteLine(ex.Message);
                             MyDebug.WriteLine(ex.Message);
                         }
                     }
                 }
             }
-            catch (WebException we)
+            catch (WebException argumentWebException)
             {
-                //Debug.WriteLine($"WebException: {we.Message}");
-                MyDebug.WriteLine($"WebException: {we.Message}");
+                MyDebug.WriteLine($"WebException: {argumentWebException.Message}");
+            }
+            catch (ArgumentNullException argumentNullException)
+            {
+                MyDebug.WriteLine($"NullException: {argumentNullException.Message}");
             }
         }
 
@@ -75,17 +77,17 @@ namespace FeedScraper.WebApp
                 }
                 catch (NullReferenceException em)
                 {
-                    //Debug.WriteLine($"{em.Message}");
-                    //Debug.WriteLine(node.OuterXml);
                     MyDebug.WriteLine($"{em.Message}");
-                    MyDebug.WriteLine(node.OuterXml);
                 }
             }
             //
             // if error message than add list of errors from debuger
             //
-            if (MyDebug.Messages.Count != 0)
+            if (MyDebug.Messages.Count > 0)
             {
+                // erase all items previously added to the list
+                newsRssList.Clear();
+                // add error message to the list
                 newsRssList.AddRange(MyDebug.Messages.Select(msg => new RssNewsEntry("debug", msg, "", DateTime.Today.ToString(CultureInfo.InvariantCulture))));
             }
             return newsRssList;
