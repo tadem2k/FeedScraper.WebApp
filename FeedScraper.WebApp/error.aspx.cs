@@ -21,13 +21,6 @@
         {
             this.Response.Clear();
             this.Response.ContentType = "text/xml";
-            /*
-            var feedValidator = new FeedValidator(this.Request);
-            var docReader = new DocumentReader(feedValidator.ErrorPageUrl);
-            this.Response.Write(docReader.XmlDoc.OuterXml);
-            */
-
-            //this.Response.Write("<?xml version=\"1.0\" encoding=\"UTF - 8\"?>");
             this.Response.Write("<messages>");
             foreach (var msg in MyDebug.Messages)
             {
